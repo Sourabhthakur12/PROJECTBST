@@ -1,0 +1,175 @@
+import java.util.Scanner;
+
+class Node {
+    int data;
+    Node left, right;
+
+    Node(int val) {
+        data = val;
+        left = right = null;
+    }
+}
+
+class BST {
+    Node root;
+
+    BST() {
+        root = null;
+    }
+
+    void insert(int data) {
+        root = insert(root, data);
+    }
+
+    boolean search(int data) {
+        return search(root, data) != null;
+    }
+
+    void remove(int data) {
+        root = remove(root, data);
+    }
+
+    void inorder() {
+        inorder(root);
+        System.out.println();
+    }
+
+    void preorder() {
+        preorder(root);
+        System.out.println();
+    }
+
+    void postorder() {
+        postorder(root);
+        System.out.println();
+    }
+
+    private Node insert(Node node, int data) {
+        if (node == null) {
+            return new Node(data);
+        }
+
+        if (data < node.data) {
+            node.left = insert(node.left, data);
+        } else {
+            node.right = insert(node.right, data);
+        }
+
+        return node;
+    }
+
+    private Node search(Node node, int data) {
+        if (node == null || node.data == data) {
+            return node;
+        }
+
+        if (data < node.data) {
+            return search(node.left, data);
+        } else {
+            return search(node.right, data);
+        }
+    }
+
+    private Node remove(Node node, int data) {
+        if (node == null) return node;
+
+        if (data < node.data) {
+            node.left = remove(node.left, data);
+        } else if (data > node.data) {
+            node.right = remove(node.right, data);
+        } else {
+            if (node.left == null) {
+                return node.right;
+            } else if (node.right == null) {
+                return node.left;
+            }
+
+            Node temp = minValueNode(node.right);
+            node.data = temp.data;
+            node.right = remove(node.right, temp.data);
+        }
+        return node;
+    }
+
+    private Node minValueNode(Node node) {
+        Node current = node;
+        while (current != null && current.left != null) {
+            current = current.left;
+        }
+        return current;
+    }
+
+    private void inorder(Node node) {
+        if (node != null) {
+            inorder(node.left);
+            System.out.print(node.data + " ");
+            inorder(node.right);
+        }
+    }
+
+    private void preorder(Node node) {
+        if (node != null) {
+            System.out.print(node.data + " ");
+            preorder(node.left);
+            preorder(node.right);
+        }
+    }
+
+    private void postorder(Node node) {
+        if (node != null) {
+            postorder(node.left);
+            postorder(node.right);
+            System.out.print(node.data + " ");
+        }
+    }
+}
+
+public class Main {
+
+    private static String base64Decode(String encoded) {
+        return new String(java.util.Base64.getDecoder().decode(encoded));
+    }
+
+    private static void printWelcomeMessage() {
+        String encodedMessage = "KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKgogICogICAgICAgICAgICAgICAgICogCiAgKipXZWxjb21lIHRvIENpcGhlciBTY2hvb2xzIEFzc2lnbm1lbnQgICoKICogICAgICBvZiBKYXZhIFByb2dyYW1taW5nIFN1bW1lciBUcmFpbmluZyAgICoKICogICAgICAgICAgICAgICAgICAqCiAgKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg==";
+        System.out.println(base64Decode(encodedMessage));
+    }
+
+    public static void main(String[] args) {
+        printWelcomeMessage();
+
+        BST bst = new BST();
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter the number of elements to insert into the BST: ");
+        int n = scanner.nextInt();
+
+        for (int i = 0; i < n; ++i) {
+            System.out.print("Enter value " + (i + 1) + ": ");
+            int value = scanner.nextInt();
+            bst.insert(value);
+        }
+
+        System.out.print("\n1. Inorder traversal: ");
+        bst.inorder();
+
+        System.out.print("\n2. Preorder traversal: ");
+        bst.preorder();
+
+        System.out.print("\n3. Postorder traversal: ");
+        bst.postorder();
+
+        System.out.print("\nEnter a value to search: ");
+        int value = scanner.nextInt();
+        System.out.println("4. Search " + value + ": " + (bst.search(value) ? "Found" : "Not Found"));
+
+        System.out.print("\nEnter a value to delete: ");
+        value = scanner.nextInt();
+        System.out.println("5. Deleting " + value);
+        bst.remove(value);
+        System.out.print("   Inorder traversal after deleting " + value + ": ");
+        bst.inorder();
+
+        scanner.close();
+    }
+}
